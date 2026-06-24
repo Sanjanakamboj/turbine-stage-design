@@ -49,7 +49,6 @@ reports/
 report_case_reference/
 *_report.pdf
 cfd_report*.pdf
-design_cases_log.xlsx
 _mcp_render_demo.png
 
 # --- Scratch / experiment files ---
