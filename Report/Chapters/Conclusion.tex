@@ -1,0 +1,29 @@
+% ------------------------------- Chapter 5 -------------------------------
+\chapter{Conclusion}
+
+The first stage of a four-stage high-pressure turbine for an F-class industrial
+gas turbine (\SI{330}{MW}, \SI{750}{kg/s}, $TIT=\SI{1400}{\degreeCelsius}$) has
+been designed through the full preliminary-design chain: 1-D mean-line analysis,
+rotor-blade construction and a cascade CFD evaluation.
+
+The mean-line design, closed by a Newton--Raphson iteration on the exit pressure,
+delivers the required specific work of \SI{219.27}{kJ/kg} per stage with a blade
+speed $U = \SI{349}{m/s}$ at the design coefficients $\psi = 1.8$, $\phi = 0.5$
+and $r = 0.35$. The resulting stage has a stator-exit absolute Mach number of
+$0.70$, a rotor turning of $112\degr$ and an exit Mach number of $0.30$. Of the
+ten design guidelines, eight are met and two ($M_2$ and $h_3/h_2$) are only
+marginally violated, so the operating point is essentially feasible and could be
+fully cleared by a small adjustment of the coefficients.
+
+The blade row (42 blades, chord \SI{0.192}{m}, stagger $39\degr$, $s/c_x=1.14$)
+was constructed with ParaBlade from the metal angles and shown to reproduce the
+prescribed curvature. The cascade RANS computation confirms the design: the
+loading is smooth and front-loaded, the passage delivers the prescribed expansion
+to $P_3 = \SI{1.107}{MPa}$, the relative exit Mach number ($\approx 0.67$) and
+exit angle ($\approx 70\degr$) agree with the mean-line prediction, and the rotor
+total-pressure loss is modest ($\approx 2.2\%$) with a narrow $9.2\%$ wake
+deficit.
+
+Overall, the design is consistent across the three levels of analysis and forms a
+sound basis for further refinement (radial equilibrium, cooling, multi-stage
+matching and a mesh-independence study of the CFD).

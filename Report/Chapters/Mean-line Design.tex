@@ -1,0 +1,307 @@
+% ------------------------------- Chapter 2 -------------------------------
+\chapter{1-D Mean-Line Design}
+
+The 1-D mean-line design is the simplified modelling strategy used in the early
+stages of turbine design. The flow is assumed axisymmetric and is averaged along
+the radial direction, so that the whole stage is represented by the conditions on
+the mean streamline. With this simplification the stage power, efficiency and
+blade loading can be evaluated quickly and the design coefficients iterated.
+
+The stage is divided into three stations: station~1 (stator inlet), station~2
+(stator exit / rotor inlet) and station~3 (rotor exit).
+
+% =====================================================================
+\section{Input Data}
+
+The following quantities are imposed by the project statement:
+
+\begin{itemize}
+    \item Working fluid: calorically perfect gas, $\gamma = 4/3 \approx 1.33$,
+          $R = \SI{287}{J/kg/K}$.
+    \item Turbine mass flow $\dot m = \SI{750}{kg/s}$; fuel-to-air ratio
+          $f_{ar}=0.025$.
+    \item Stage (extracted) shaft power $P = \SI{330}{MW}$ (the turbine also
+          drives the compressor).
+    \item Overall compressor pressure ratio $\Pi_C = 20$.
+    \item Compressor admission $T_{adm} = \SI{15}{\degreeCelsius}$,
+          $P_{adm} = \SI{101325}{Pa}$, isentropic efficiency $\eta_{is,C}=0.92$.
+    \item Combustion-chamber Mach number $M_{comb}=0.15$.
+    \item Turbine inlet static temperature (F-class) $TIT = \SI{1400}{\degreeCelsius}$.
+    \item Inlet yaw angle $\alpha_1 = 0\degr$ (fully axial); rotational speed
+          $N_{rot}=\SI{3000}{rpm}$ (synchronous generator).
+    \item Blade peripheral speed limited to $U_m = \omega R_m \le \SI{350}{m/s}$;
+          mechanical constraint $AN^2 < \SI{3e7}{m^2\,rpm^2}$.
+    \item Constant mean radius $R_{mean}$ across the stage; fixed blading
+          efficiencies $\eta_{S,R}=0.90$.
+\end{itemize}
+
+% =====================================================================
+\section{Design Procedure}
+
+\subsection{Inlet Condition Calculations}
+
+The specific heats are obtained from $\gamma$ and $R$:
+\begin{equation}
+    c_p = \frac{\gamma R}{\gamma-1} = \SI{1156.70}{J/kg/K},\qquad
+    c_v = \frac{R}{\gamma-1} = \SI{869.70}{J/kg/K}.
+\end{equation}
+
+Only air flows through the compressor, so its mass flow differs from the turbine:
+\begin{equation}
+    \dot m_c = \frac{\dot m_T}{1.025} = \SI{731.71}{kg/s}.
+\end{equation}
+With $\gamma_C = 1.4$ for the compressor, the absorbed compressor power is
+\begin{equation}
+    P_c = \frac{1}{\eta_{is}\,\eta_m}\,\dot m_c\,c_{p,C}\,T_{adm}
+          \left[\Pi_C^{\frac{\gamma_C-1}{\gamma_C}}-1\right] = \SI{327.82}{MW},
+\end{equation}
+taking a mechanical efficiency $\eta_m = 0.95$. The compressor exit (turbine
+inlet) static pressure follows from the pressure ratio,
+\begin{equation}
+    P_1 = \Pi_C \, P_{adm} = \SI{2026500}{Pa}.
+\end{equation}
+The turbine inlet stagnation properties are obtained from the combustion-chamber
+Mach number:
+\begin{align}
+    P_{01} &= P_1\left(1+\tfrac{\gamma-1}{2}M_{comb}^2\right)^{\frac{\gamma}{\gamma-1}}
+            = \SI{2056992}{Pa},\\
+    T_{01} &= T_1\left(1+\tfrac{\gamma-1}{2}M_{comb}^2\right)
+            = \SI{1679.21}{K},
+\end{align}
+with $T_1 = TIT = \SI{1673}{K}$.
+
+\subsection{Required \texorpdfstring{$P_3$}{P3} Calculations}
+
+The total power to be produced by the four-stage turbine is the sum of the net
+shaft power and the compressor power, so the power per stage is
+\begin{equation}
+    P_{stage} = \frac{P + P_c}{4} = \SI{164.46}{MW}.
+\end{equation}
+The corresponding real specific work and isentropic enthalpy drop
+(with $\eta_{TT}=0.87$) are
+\begin{equation}
+    \Delta H_{real} = \frac{P_{stage}}{\dot m} = \SI{219.27}{kJ/kg},\qquad
+    \Delta H_{is} = \frac{\Delta H_{real}}{\eta_{TT}} = \SI{243.64}{kJ/kg}.
+\end{equation}
+The isentropic exit stagnation state and stage pressure ratio are
+\begin{equation}
+    T_{03,is} = T_{01}-\frac{\Delta H_{is}}{c_p} = \SI{1468.58}{K},\quad
+    P_{03,is} = \SI{1198493}{Pa},\quad
+    \Pi_{TT,is} = \frac{P_{01}}{P_{03,is}} \approx 1.72 .
+\end{equation}
+Assuming an exit Mach number $M_3 = 0.3$ (within the recommended $0.3$--$0.4$
+band) closes the static exit state and gives a first estimate of $P_3$, which is
+later refined by the iteration of Section~\ref{sec:enth}.
+
+\subsection{Assumptions of Design Parameters}
+
+Three coefficients are chosen and iterated to meet the design guidelines:
+
+\paragraph{Stage loading $\psi = \Delta H_{real}/U^2$.}
+For a high-pressure stage $\psi$ is typically $1.5$--$2$. It controls the width
+of the velocity triangles, the turning and the exit Mach number. Fixing
+$\psi = 1.8$ gives a blade speed
+\begin{equation}
+    U_m = \sqrt{\frac{\Delta H_{real}}{\psi}} = \SI{349.03}{m/s},
+\end{equation}
+just within the \SI{350}{m/s} mechanical limit.
+
+\paragraph{Flow coefficient $\phi = V_x/U$.}
+The flow coefficient sets the height of the velocity triangles. Using a Smith
+chart~\cite{smith} at the chosen efficiency and $\psi$, a value $\phi = 0.5$ is
+selected, giving an axial velocity $V_x = \SI{174.5}{m/s}$.
+
+\paragraph{Degree of reaction $r = (h_2-h_3)/(h_1-h_3)$.}
+For a cooled high-pressure stage the reaction is kept low, $0.35$--$0.5$; here
+$r = 0.35$ is adopted.
+
+% =====================================================================
+\section{Thermodynamic Quantities}
+\label{sec:thermo}
+
+With the inlet state and the three coefficients fixed, the thermodynamic and
+kinematic quantities are computed at every station. Station~2 follows from the
+stator expansion ($V_{x2}=U\phi$, $P_2 = r(P_1-P_3)+P_3$, stator efficiency
+$\eta_S$); the relative frame ($W_2$, $\beta_2$, $T_{02R}$, $P_{02R}$) is then
+formed, and the rotor exit (station~3) is obtained from the relative isentropic
+expansion to $P_3$ with rotor efficiency $\eta_R$. Table~\ref{tab:stations}
+collects the converged values.
+
+\begin{table}[H]
+\centering
+\caption{Thermodynamic and kinematic quantities at the three stations.}
+\label{tab:stations}
+\small
+\begin{tabular}{l r r r}
+\toprule
+\textbf{Quantity} & \textbf{Station 1} & \textbf{Station 2} & \textbf{Station 3}\\
+\midrule
+Static pressure $P$ [Pa]            & 2026500 & 1428997 & 1107265 \\
+Total pressure (abs.) $P_0$ [Pa]    & 2056992 & 1954202 & 1166813 \\
+Rel. total pressure $P_{0R}$ [Pa]   & --      & 1521338 & 1472070 \\
+Static temperature $T$ [K]          & 1673.0  & 1553.7  & 1470.4 \\
+Total temperature (abs.) $T_0$ [K]  & 1679.2  & 1679.2  & 1489.6 \\
+Rel. total temperature $T_{0R}$ [K] & --      & 1578.1  & 1578.1 \\
+Absolute velocity $V$ [m/s]         & 174.5   & 538.8   & 211.0 \\
+Axial velocity $V_x$ [m/s]          & 174.5   & 174.5   & 174.5 \\
+Tangential velocity $V_u$ [m/s]     & 0.0     & 509.7   & 118.5 \\
+Relative velocity $W$ [m/s]         & --      & 237.2   & 499.1 \\
+Yaw angle $\alpha$ [\degr]          & 0.00    & 71.10   & 34.18 \\
+Relative angle $\beta$ [\degr]      & --      & 42.64   & 69.53 \\
+Absolute Mach $M$ [-]               & 0.22    & 0.70    & 0.30 \\
+Relative Mach $M_w$ [-]             & --      & 0.31    & 0.67 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The stator-exit Mach $M_2 = 0.70$ and the relative exit Mach $M_{w3}=0.67$ are
+consistent with a low-reaction high-pressure stage in which the bulk of the
+acceleration occurs in the stator.
+
+% =====================================================================
+\section{Velocity Triangles}
+
+The velocity triangles at stations~2 and~3 are built from the blade speed $U$,
+the absolute velocity $V$ and the relative velocity $W$, together with the flow
+angle $\alpha$ and the blade angle $\beta$. They are plotted in
+Fig.~\ref{fig:tri} and summarised in Table~\ref{tab:tri}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Velocity Triangles at Rotor Inlet (2) and Exit (3).png}
+\caption{Velocity triangles at rotor inlet (station 2) and exit (station 3).}
+\label{fig:tri}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Velocity-triangle parameters.}
+\label{tab:tri}
+\begin{tabular}{l r r}
+\toprule
+\textbf{Parameter} & \textbf{Station 2} & \textbf{Station 3}\\
+\midrule
+$U$ -- blade speed [m/s]        & 349.03 & 349.03 \\
+$V$ -- absolute velocity [m/s]  & 538.78 & 210.95 \\
+$W$ -- relative velocity [m/s]  & 237.24 & 499.05 \\
+$\alpha$ -- flow angle [\degr]  & 71.10  & 34.18 \\
+$\beta$ -- blade angle [\degr]  & 42.64  & 69.53 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The total turning of the rotor is $\Delta\beta = \beta_2+\beta_3 = 112.2\degr$,
+typical of a heavily loaded high-pressure rotor.
+
+% =====================================================================
+\section{h--s Diagram}
+
+The enthalpy--entropy diagram (Fig.~\ref{fig:hs}) summarises the expansion: the
+isentropic, static and stagnation enthalpies at each station and the kinetic
+energy terms $V^2/2$ and $W^2/2$. The enthalpy ladder is listed in
+Table~\ref{tab:hs}.
+
+\begin{table}[H]
+\centering
+\caption{Enthalpy ladder of the stage (J/kg).}
+\label{tab:hs}
+\begin{tabular}{l r l r}
+\toprule
+\textbf{Quantity} & \textbf{Value} & \textbf{Quantity} & \textbf{Value}\\
+\midrule
+$H_{01}=H_{02}$ & 1942338 & $h_3$    & 1700813 \\
+$h_1$           & 1935154 & $h_{3s}$ & 1686977 \\
+$h_2$           & 1797198 & $h_{3ss}$& 1665655 \\
+$h_{2s}$        & 1781071 & $H_{03}$ & 1723063 \\
+$H_{0R}$        & 1825338 & $H_{03ss}$& 1687906 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{h-s Diagram for Turbine Stage.png}
+\caption{h--s diagram of the first turbine stage.}
+\label{fig:hs}
+\end{figure}
+
+\subsection{Comparison of Enthalpy (closure of the design)}
+\label{sec:enth}
+
+The exit static pressure $P_3$ is not known a priori. The stage enthalpy drop
+computed kinematically from the velocity triangles, $\Delta H_0 = c_p(T_{01}-T_{03})$,
+must equal the value $\Delta H_{real}=P_{stage}/\dot m$ imposed by the power
+balance. A Newton--Raphson loop adjusts $P_3$ until the two agree:
+\[
+\Delta H_0 < \Delta H_{real} \Rightarrow P_3' < P_3,\quad
+\Delta H_0 > \Delta H_{real} \Rightarrow P_3' > P_3,\quad
+\Delta H_0 = \Delta H_{real} \Rightarrow \text{OK}.
+\]
+The loop converges in 33 iterations to
+$P_3 = \SI{1107265}{Pa}$, with $\Delta H_0 = \Delta H_{real} = \SI{219.27}{kJ/kg}$
+(residual $< \SI{1e-5}{kJ/kg}$).
+
+% =====================================================================
+\section{Annulus Sizing}
+
+Annulus sizing fixes the radial extent of the blade row. With a shrouded
+end-wall assumption (equal hub and tip contour angles $\varepsilon$), the areas
+follow from mass conservation, $A = \dot m/(\rho V_x)$, and the heights from
+$h = A/(\pi D_m)$. The mean radius is set by the blade speed,
+$R_m = 60\,U_m/(2\pi N) = \SI{1.11}{m}$. Table~\ref{tab:annulus} lists the
+results.
+
+\begin{table}[H]
+\centering
+\caption{Annulus geometry (constant mean radius).}
+\label{tab:annulus}
+\begin{tabular}{l r}
+\toprule
+\textbf{Quantity} & \textbf{Value}\\
+\midrule
+Mean radius $R_m$ [m]            & 1.110 \\
+Span $h_2$ [mm]                  & 192.1 \\
+Span $h_3$ [mm]                  & 234.6 \\
+Tip radius (st.\ 3) $R_{T3}$ [m] & 1.228 \\
+Hub radius (st.\ 3) $R_{H3}$ [m] & 0.994 \\
+End-wall flare $\varepsilon$ [\degr] & 15.90 \\
+$AN^2$ [m$^2$\,rpm$^2$]          & $1.341\times10^{7}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The end-wall flare angle, obtained from the span growth over the axial chord,
+$\varepsilon = \tan^{-1}\!\big((h_3-h_2)/c_x\big) = 15.90\degr$, stays below the
+$15$--$20\degr$ range that bounds end-wall separation.
+
+% =====================================================================
+\section{Design Constraints}
+
+Table~\ref{tab:constr} compares the obtained values against the aerodynamic and
+mechanical design guidelines. Eight of the ten constraints are satisfied; two are
+marginally violated -- the stator-exit Mach number $M_2 = 0.700$ sits exactly at
+the lower edge of the $0.7$--$0.85$ band, and the span ratio $h_3/h_2 = 1.221$
+slightly exceeds the recommended $1.2$. Both are borderline and could be cleared
+by a small change of $\psi$, $\phi$ or $r$.
+
+\begin{table}[H]
+\centering
+\caption{Comparison of design control parameters and obtained results.}
+\label{tab:constr}
+\begin{tabular}{l c c c}
+\toprule
+\textbf{Constraint} & \textbf{Design range} & \textbf{Obtained} & \textbf{Status}\\
+\midrule
+$M_2$              & $0.7$--$0.85$ & 0.700  & FAIL (low) \\
+$\beta_2$ [\degr]  & $<47.5$       & 42.64  & PASS \\
+$M_{w2}$           & $<0.5$        & 0.308  & PASS \\
+$M_{w3}$           & $0.65$--$0.8$ & 0.666  & PASS \\
+$\beta_3$ [\degr]  & $<75$         & 69.53  & PASS \\
+$\Delta\beta$ [\degr] & $110$--$120$ & 112.17 & PASS \\
+$M_3$              & $0.3$         & 0.300  & PASS \\
+$\alpha_3$ [\degr] & $<35$         & 34.18  & PASS \\
+$h_3/h_2$          & $<1.2$        & 1.221  & FAIL (high) \\
+$AN^2$ [m$^2$rpm$^2$] & $<3\times10^7$ & $1.34\times10^7$ & PASS \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,208 @@
+% ------------------------------- Chapter 4 -------------------------------
+\chapter{Rotor Blade Construction and CFD Evaluation}
+
+The blade profile obtained in Chapter~3 is assembled into a linear cascade and
+evaluated with a 2-D RANS computation. This chapter describes the passage
+geometry, the mesh, the solver setup and convergence, and the post-processed
+aerodynamic results (loading, Mach/pressure fields and the exit wake).
+
+% =====================================================================
+\section{Blade Passage Geometry}
+
+The cascade is modelled as three blades: the central (measured) blade and its two
+neighbours, whose facing surfaces form the upper and lower passage walls. The
+non-dimensional pitch and throat characterise the passage:
+\begin{equation}
+    s/c_x = 1.136,\quad o/c_x = 0.805,\quad o/s = 0.709,\quad
+    (x/c_x)_{throat} = 0.284,
+\end{equation}
+with dimensional values $c_x = \SI{0.149}{m}$, $s = \SI{0.170}{m}$ and throat
+$o = \SI{0.120}{m}$, for $N_b = 42$ blades.
+
+\section{Evaluation of Profile Curvature and Passage Area}
+
+The prescribed thickness distribution and the analytic curvature of the surfaces
+are shown in Fig.~\ref{fig:thkcur}; the passage-width (area) variation along the
+axial direction, which contracts monotonically to the throat, is shown in
+Fig.~\ref{fig:passwidth}. A smooth, monotonic contraction without local
+diffusion is desirable to avoid boundary-layer growth on the suction side.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{Passage Width Variation.png}
+\caption{Passage-width (area) variation through the blade row.}
+\label{fig:passwidth}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.3\textwidth}
+    \includegraphics[width=\textwidth]{Blade Cascade.png}
+    \caption{Cascade of rotor blades.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.4\textwidth}
+    \includegraphics[width=\textwidth]{Rotor Blade Passage Geometry.png}
+    \caption{Blade-to-blade passage and throat.}
+\end{subfigure}
+\caption{Rotor-blade cascade and passage geometry.}
+\label{fig:passage}
+\end{figure}
+
+% =====================================================================
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{Thickness Distribution.png}
+    \caption{Thickness distribution.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{Curvature Distribution.png}
+    \caption{Curvature $\kappa$ distribution.}
+\end{subfigure}
+\caption{Profile thickness and curvature along the normalised surface coordinate.}
+\label{fig:thkcur}
+\end{figure}
+
+
+
+% =====================================================================
+\section{CFD Evaluation}
+
+\subsection{Mesh Generation}
+
+An unstructured triangular mesh is generated with GMSH~\cite{gmsh} over the
+three-blade passage. The domain is bounded by the central blade (no-slip wall),
+the two neighbour walls (the pressure side of the upper blade and the suction side
+of the lower blade), and inlet/outlet planes extended half an axial chord upstream
+and downstream along the flow angles $+\beta_2$ and $-\beta_3$. The inlet and
+outlet heights are both $\approx 2s = \SI{339.2}{mm}$. A distance-based size field
+refines the cells near all blade walls. The mesh contains about $1.81\times10^4$
+nodes and $3.54\times10^4$ elements.
+
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.35\textwidth}
+    \includegraphics[width=\textwidth]{Mesh-geo-verification.png}
+    \caption{Geometry verification of the 3-blade domain.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.65\textwidth}
+    \includegraphics[width=\textwidth]{Blade-mesh.png}
+    \caption{Generated GMSH mesh.}
+\end{subfigure}
+\caption{Three-blade cascade domain and mesh.}
+\label{fig:mesh}
+\end{figure}
+
+
+\subsection{CFD Setting}
+
+The flow is solved with SU2~\cite{su2} (compressible RANS, Spalart--Allmaras
+turbulence model). The boundary conditions are imposed in the rotor-relative
+frame: stagnation inlet from station~2 ($T_{02R}$, $P_{02R}$, flow direction
+$\beta_2$), static back-pressure $P_3$ at the outlet, a no-slip adiabatic central
+blade and inviscid (Euler) neighbour walls. The main settings are listed in
+Table~\ref{tab:su2}.
+
+
+\begin{table}[H]
+\centering
+\caption{SU2 CFD solver configuration.}
+\label{tab:su2}
+\begin{tabular}{l l}
+\toprule
+\textbf{Setting} & \textbf{Value}\\
+\midrule
+Solver                       & RANS (compressible) \\
+Turbulence model             & Spalart--Allmaras \\
+Inlet total temperature $T_{02R}$ [K] & 1578.1 \\
+Inlet total pressure $P_{02R}$ [Pa]   & 1521338 \\
+Inlet flow angle $\beta_2$ [\degr]    & 42.64 \\
+Outlet static pressure $P_3$ [Pa]     & 1107265 \\
+Inlet relative Mach $M_{w2}$          & 0.308 \\
+Central blade (WALL\_MID)    & no-slip, adiabatic \\
+Neighbour walls (WALL\_UP/LO)& Euler (slip) \\
+Convergence monitor          & RMS density residual \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{CFD Convergence}
+
+The simulation is advanced until the density residual drops by several orders of
+magnitude (RMS$[\rho]$ falling below $-7.7$), at which point the surface loading
+and the integral exit quantities are stationary. The solution is then used for
+the post-processing below.
+
+% =====================================================================
+\section{Isentropic Static-Pressure Distribution}
+
+The blade loading is examined through the isentropic Mach number and the static
+pressure on the suction and pressure surfaces (Fig.~\ref{fig:loading}). The
+suction-side isentropic Mach number rises to $M_{is}\approx 0.84$ near the throat
+before recovering, while the pressure side stays below $\approx 0.79$; the static
+pressure spans $1.02$--$\SI{1.53}{MPa}$ on the pressure side and
+$0.98$--$\SI{1.52}{MPa}$ on the suction side. The loading is front-to-mid loaded
+with no sign of suction-side separation.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{Isentropic_Mach.png}
+    \caption{Isentropic Mach number.}
+\end{subfigure}\hfill
+\begin{subfigure}{0.48\textwidth}
+    \includegraphics[width=\textwidth]{Pressure Distribution.png}
+    \caption{Static pressure on PS / SS.}
+\end{subfigure}
+\caption{Blade loading: isentropic Mach and static-pressure distribution.}
+\label{fig:loading}
+\end{figure}
+
+% =====================================================================
+\section{Colourmaps of the CFD Analysis}
+
+The Mach-number and static-pressure fields (Fig.~\ref{fig:colourmaps}) show the
+flow accelerating through the converging passage, the peak velocity on the
+suction side near the throat, and the smooth pressure relaxation towards the
+outlet, consistent with the prescribed expansion to $P_3$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{CFD_Colormaps.png}
+\caption{CFD colourmaps of the cascade flow: Mach number, specific total
+enthalpy, entropy rise and static pressure.}
+\label{fig:colourmaps}
+\end{figure}
+
+% =====================================================================
+\section{Velocity Profile and Wake}
+
+The pitchwise distributions one trailing-edge region downstream
+(Fig.~\ref{fig:wake}) reveal the blade wake as a momentum deficit in all four
+quantities -- total pressure, Mach number, flow angle and axial velocity. At the
+extraction plane $x = x_{TE}+0.30\,c_x = \SI{0.194}{m}$ the mass-averaged total
+pressure is $P_t = \SI{1.49}{MPa}$ ($P_t/P_{t0}=0.978$), the mean Mach number is
+$0.681$ and the mean flow angle is $-70.7\degr$. The axial velocity drops from
+$\approx \SI{191}{m/s}$ in the free stream to $\approx \SI{158}{m/s}$ in the wake
+core (a $9.2\%$ deficit), narrow and well-mixed.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{Pitchwise_Distributions.png}
+\caption{Exit-plane pitchwise distributions of total pressure, Mach number, flow
+angle and axial velocity (wake), shown un-normalised.}
+\label{fig:wake}
+\end{figure}
+
+% =====================================================================
+\section{CFD Prediction Result}
+
+The CFD confirms the mean-line design: the relative exit Mach number
+($M_{w3}\approx 0.67$--$0.68$) and exit angle ($\approx 70\degr$ relative) match
+the design intent, the passage delivers the prescribed expansion to $P_3$, and
+the stage total-pressure loss across the rotor is modest ($P_t/P_{t0}=0.978$,
+i.e.\ $\approx 2.2\%$) with a narrow, attached wake. The blade row is therefore
+aerodynamically sound for the chosen mean-line operating point.

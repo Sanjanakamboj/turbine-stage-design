@@ -1,0 +1,47 @@
+% ------------------------------- Chapter 1 -------------------------------
+\chapter{Introduction}
+
+A turbomachine produces or absorbs energy through a change of enthalpy in a
+continuously flowing stream, transferring work through a rotating shaft. In a
+gas turbine the turbine extracts work from the hot combustion products by
+expansion: the flow accelerates at the expense of pressure, and a large part of
+the extracted power is used to drive the compressor through the shaft, the
+remainder being the useful (net) output.
+
+Designing a turbine stage couples thermodynamics, kinematics (velocity
+triangles), annulus geometry and mechanical constraints~\cite{dixon}. The
+procedure followed in this work is the classical three-step chain of preliminary
+design:
+
+\begin{itemize}
+    \item \textbf{1-D mean-line design} -- thermodynamic and velocity-triangle
+          analysis on the mean streamline;
+    \item \textbf{Rotor-blade design} -- conversion of the flow angles into a
+          blade profile (chord, stagger, pitch, blade count);
+    \item \textbf{CFD evaluation} -- meshing and RANS solution of the resulting
+          cascade to verify the loading and exit flow.
+\end{itemize}
+
+\begin{wrapfigure}{r}{0.55\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{engine.png}
+    \caption{Industrial gas turbine of the SGT5-4000F class (cutaway).}
+    \label{fig:engine}
+\end{wrapfigure}
+
+These steps are not executed once and in isolation: the design coefficients
+(stage loading $\psi$, flow coefficient $\phi$ and degree of reaction $r$) are
+iterated until the resulting stage satisfies a set of aerodynamic and mechanical
+design guidelines. This report focuses on the \textbf{first stage} of a
+four-stage high-pressure turbine sized for the conditions of an F-class
+industrial gas turbine (representative of the Siemens SGT5-4000F), delivering
+\SI{330}{MW} of shaft power at a mass flow of \SI{750}{kg/s}.
+
+
+
+
+The whole design chain has been implemented in Python (the accompanying
+notebook): the mean-line solver, the ParaBlade-based blade
+construction~\cite{parablade} and the GMSH~\cite{gmsh}\,+\,SU2~\cite{su2} cascade
+CFD. All numerical results, tables and figures in this report are produced
+directly by that code.

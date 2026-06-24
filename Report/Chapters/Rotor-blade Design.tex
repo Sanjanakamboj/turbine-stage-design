@@ -1,0 +1,91 @@
+% ------------------------------- Chapter 3 -------------------------------
+\chapter{Rotor Blade Design}
+
+The rotor-blade design converts the mean-line flow angles into an actual blade
+profile. A few geometric assumptions (aspect ratio, stagger) fix the chord and
+the number of blades, after which the camber line and the thickness distribution
+are built with ParaBlade from the inlet/exit metal angles.
+
+% =====================================================================
+\section{Input Data Assumptions}
+
+\paragraph{Aspect ratio $AR = b/\bar c$.}
+The aspect ratio relates the blade span $b$ to the chord $\bar c$. For
+high-pressure rotors $AR$ lies between $1$ and $1.5$; a value $AR = 1$ is adopted,
+which gives the best compromise for the present loading.
+
+\paragraph{Stagger angle $\xi$.}
+The stagger is the angle between the chord and the axial direction. It is read
+from the Kacker \& Okapuu correlation~\cite{kacker} as a function of the inlet and
+exit relative angles $\beta_2 = 42.64\degr$ and $\beta_3 = 69.53\degr$, giving
+$\xi \approx 39\degr$.
+
+\paragraph{Zweifel loading coefficient.}
+The blade pitch (and hence the blade count) is set from the Zweifel
+criterion~\cite{zweifel} with $Z = 1.0$, which fixes the optimum
+pitch-to-axial-chord ratio for the prescribed turning.
+
+% =====================================================================
+\section{Design Procedure and Calculations}
+
+From the aspect ratio and the span, the chord and axial chord are obtained; the
+Zweifel criterion then fixes the pitch and, with the mean circumference, the
+number of blades:
+\begin{equation}
+    N_b = \frac{2\pi R_m}{s},\qquad s = \text{pitch}.
+\end{equation}
+The camber line is generated between the metal angles $\beta_2$ (inlet) and
+$\beta_3$ (exit) and combined with a prescribed thickness distribution to produce
+the suction and pressure surfaces using ParaBlade~\cite{parablade}. The tool
+reproduces the prescribed analytic curvature: a check of the curvature design
+variable against the analytic surface curvature matches at both ends
+($\kappa_{LE}=17.61$, $\kappa_{TE}=213.29$), confirming a consistent profile.
+
+% =====================================================================
+\section{Main Blade Parameters}
+
+The resulting blade parameters are collected in Table~\ref{tab:blade}; the
+constructed section is shown in Fig.~\ref{fig:section}.
+
+
+
+
+
+\begin{minipage}{0.58\textwidth}
+    \begin{table}[H]
+\centering
+\caption{Main rotor-blade parameters.}
+\label{tab:blade}
+\begin{tabular}{l r}
+\toprule
+\textbf{Parameter} & \textbf{Value}\\
+\midrule
+Inlet flow angle $\alpha_2$ [\degr]          & 71.10 \\
+Inlet metal (rel.) angle $\beta_2$ [\degr]   & 42.64 \\
+Exit flow angle $\alpha_3$ [\degr]           & 34.18 \\
+Exit metal (rel.) angle $\beta_3$ [\degr]    & 69.53 \\
+Aspect ratio $AR$                            & 1.00 \\
+Stagger angle $\xi$ [\degr]                   & 39.0 \\
+Zweifel coefficient $Z$                      & 1.00 \\
+Chord $c$ [m]                                & 0.192 \\
+Axial chord $c_x$ [m]                        & 0.149 \\
+Pitch $s$ [m]                                & 0.170 \\
+Pitch-to-axial-chord $s/c_x$                 & 1.14 \\
+Number of blades $N_b$                       & 42 \\
+Max. thickness-to-chord $t_{max}/c$          & 0.20 \\
+Leading-edge radius $R_{LE}$ [m]             & 0.0085 \\
+Trailing-edge radius $R_{TE}$ [m]            & 0.0007 \\
+End-wall flare angle $\varepsilon$ [\degr]    & 15.90 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\end{minipage}
+\hfill
+\begin{minipage}{0.38\textwidth}
+    \begin{figure}[H]
+\centering
+\includegraphics[width=0.55\textwidth]{Blade Section.png}
+\caption{Constructed rotor-blade section (camber line and thickness distribution).}
+\label{fig:section}
+\end{figure}
+\end{minipage}

@@ -1,0 +1,60 @@
+% =====================================================================
+%  LMECA2323 - Turbomachinery Project
+%  Characterization of a high-pressure turbine stage
+%  Modular report.  Compile with:  latexmk -pdf Report.tex
+% =====================================================================
+\documentclass[11pt,a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{graphicx}
+\usepackage{grffile}   % allow spaces / extra dots / parentheses in image filenames
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{wrapfig}
+\graphicspath{{Figures/}}
+
+% ---- running header / footer (mimics the reference report) ----------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\itshape High-pressure stage turbine design}
+\fancyfoot[R]{\small Page | \thepage}
+\renewcommand{\headrulewidth}{1.0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parskip}{0.5em}
+\setlength{\parindent}{0pt}
+
+% degree symbol used throughout the chapters
+\newcommand{\degr}{\ensuremath{^\circ}}
+
+\begin{document}
+
+\input{Chapters/Title}
+
+\pagenumbering{roman}
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+\input{Chapters/Introduction}
+\input{Chapters/Mean-line Design}
+\input{Chapters/Rotor-blade Design}
+\input{Chapters/CFD evaluation}
+\input{Chapters/Conclusion}
+
+\input{Chapters/Bibliography}
+
+\end{document}
