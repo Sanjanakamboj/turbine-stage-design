@@ -1,0 +1,13 @@
+mcp[cli]>=1.2
+pydantic>=2.0
+numpy
+matplotlib            # PDF report generation (default-on in every tool)
+# CFD tools only:
+gmsh
+pyvista
+pandas
+scipy
+# airfoil generation uses the vendored parablade-master/ (PARABLADE_PATH)
+# dev / tests:
+pytest>=7.0
+openpyxl             # Excel case-log (accumulating test-case table)
