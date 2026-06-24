@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "turbine": {
+      "command": "python3",
+      "args": ["turbine_mcp/turbine_mcp_server.py"]
+    }
+  }
+}
