@@ -21,11 +21,18 @@ The first three are pure Python and work out of the box. Only
 
 ## Setup (gets `/mcp` working)
 
-### 1. Clone
+### 1. Clone (with the ParaBlade submodule)
+ParaBlade is pulled in as a git submodule, so clone recursively:
 ```bash
-git clone <repo-url> turbine-stage-design
+git clone --recurse-submodules https://github.com/Sanjanakamboj/turbine-stage-design.git
 cd turbine-stage-design
 ```
+Already cloned without `--recurse-submodules`? Fetch it now:
+```bash
+git submodule update --init parablade-master
+```
+(The submodule is only needed for the airfoil/stage/CFD tools; the mean-line tool
+works without it.)
 
 ### 2. Install Python dependencies
 Use the **same `python3`** that Claude Code will launch (the `.mcp.json` calls
@@ -67,11 +74,14 @@ Everything defaults relative to the repo. Override via env vars only if needed:
 
 ## Layout
 - `turbine_mcp/` — the MCP server + the importable `turbine_design/` package (design logic, CFD, reports) + tests
-- `parablade-master/` — vendored [ParaBlade](https://github.com/RoberAgro/parablade) (GPLv3), used by the airfoil tool
+- `parablade-master/` — **git submodule** → [ParaBlade](https://github.com/NAnand-TUD/parablade) (GPLv3), used by the airfoil/report tools
 - `.mcp.json` — project MCP server registration (portable, relative paths)
 
 ## Notes
 - Generated artifacts (CFD runs, meshes, `*.vtu`/`*.su2`, report PDFs, case log)
   are **git-ignored** — they're produced by the tools, not committed.
-- ParaBlade is bundled under GPLv3 (see `parablade-master/LICENSE`); its heavy
-  `testcases/` and `docs/` are git-ignored to keep the clone small.
+- ParaBlade is referenced as a submodule (pinned upstream commit), not redistributed
+  here. It needs `numpy`/`scipy`/`matplotlib` (already in `requirements.txt`) —
+  there's no need to run ParaBlade's own `setup.py`.
+- `turbine_design/geometry.py` adds a small matplotlib-compat shim so upstream
+  ParaBlade's `plot_*` methods work on matplotlib ≥ 3.8 (which removed `Tick.label`).

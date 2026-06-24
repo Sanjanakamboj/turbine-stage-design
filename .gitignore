@@ -38,6 +38,4 @@ _*.py
 _*.su2
 *.bak
 
-# --- Bundled ParaBlade: keep the library, drop heavy test data & docs ---
-parablade-master/testcases/
-parablade-master/docs/
+# (ParaBlade is a git submodule — see .gitmodules — not tracked file-by-file here)
