@@ -34,8 +34,8 @@ design_cases_log.xlsx
 _mcp_render_demo.png
 
 # --- Scratch / experiment files ---
-_*.py
-_*.su2
+# (single leading underscore + lowercase, e.g. _confirm_fix.py — NOT __init__.py)
+_[a-z]*.py
 *.bak
 
 # (ParaBlade is a git submodule — see .gitmodules — not tracked file-by-file here)
