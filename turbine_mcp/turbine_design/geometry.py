@@ -214,8 +214,19 @@ def passage_metrics(blade, s_over_Cx: float, n: int = 1200) -> Dict[str, Any]:
 # --------------------------------------------------------------------------- #
 # Plot functions (lazy matplotlib; each draws onto a supplied ax)
 # --------------------------------------------------------------------------- #
+def _ensure_tick_label_compat() -> None:
+    """ParaBlade's ``plot_*`` methods call ``tick.label.set_fontsize(...)``, but
+    matplotlib removed ``Tick.label`` in 3.8 (split into ``label1``/``label2``).
+    Restore the attribute so the unmodified upstream ParaBlade (pulled as a git
+    submodule) works on modern matplotlib without patching its source."""
+    import matplotlib.axis as _maxis
+    if not hasattr(_maxis.Tick, "label"):
+        _maxis.Tick.label = property(lambda self: self.label1)
+
+
 def plot_blade_section(ax, blade) -> None:
     """Single rotor blade section (surfaces + camber line) via ParaBlade."""
+    _ensure_tick_label_compat()
     blade.plot_blade_section(fig=ax.figure, ax=ax,
                              upper_side='yes', lower_side='yes',
                              upper_side_control_points='no', lower_side_control_points='no',
@@ -225,18 +236,21 @@ def plot_blade_section(ax, blade) -> None:
 
 def plot_blade_cascade(ax, blade) -> None:
     """Three-blade cascade via ParaBlade (uses blade.spacing = s/Cx)."""
+    _ensure_tick_label_compat()
     blade.plot_blade_cascade(fig=ax.figure, ax=ax)
     ax.set_title("Rotor blade cascade")
 
 
 def plot_thickness_distribution(ax, blade) -> None:
     """Prescribed thickness distribution (upper/lower B-splines) via ParaBlade."""
+    _ensure_tick_label_compat()
     blade.plot_thickness_distribution(fig=ax.figure, ax=ax)
     ax.set_title("Thickness distribution")
 
 
 def plot_curvature_distribution(ax, blade) -> None:
     """Analytic section curvature distribution via ParaBlade."""
+    _ensure_tick_label_compat()
     blade.plot_curvature_distribution(fig=ax.figure, ax=ax)
     ax.set_title("Curvature distribution")
 
