@@ -46,6 +46,7 @@ su2_run.log
 
 # --- Generated reports / case logs / outputs ---
 reports/
+latex_reports/
 report_case_reference/
 *_report.pdf
 cfd_report*.pdf
