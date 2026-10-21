@@ -5,24 +5,25 @@ It is opt-in so the default suite stays fast and pure-Python. Enable with:
 
     RUN_CFD_TESTS=1 pytest tests/test_cfd_integration.py
 
-It needs the SU2_CFD binary (env SU2_BIN or the project default) and a blade
+It needs the SU2_CFD binary (env SU2_BIN, or SU2_CFD on PATH) and a blade
 .dat. It verifies the pipeline runs and — importantly — that a non-converged
 solve is reported honestly (converged flag + warning) rather than passed off as
 a trustworthy result.
 """
 import os
+import shutil
 
 import pytest
 
 RUN = os.environ.get("RUN_CFD_TESTS") == "1"
-SU2_BIN = os.environ.get("SU2_BIN", "/Users/sanju/Downloads/bin/SU2_CFD")
+SU2_BIN = os.environ.get("SU2_BIN", "SU2_CFD")
 PROJECT_DIR = os.environ.get(
     "TURBINE_PROJECT_DIR",
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 BLADE_DAT = os.path.join(PROJECT_DIR, "blade_coordinates.dat")
 
 pytestmark = pytest.mark.skipif(
-    not (RUN and os.path.exists(SU2_BIN) and os.path.exists(BLADE_DAT)),
+    not (RUN and shutil.which(SU2_BIN) and os.path.exists(BLADE_DAT)),
     reason="set RUN_CFD_TESTS=1 and ensure SU2_BIN + blade_coordinates.dat exist")
 
 

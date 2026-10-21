@@ -4,7 +4,9 @@ from paraview.simple import *
 import os
 
 paraview.simple._DisableFirstRenderCameraReset()
-W = '/Users/sanju/Projects/Python/Turbine Stage Design'
+# repo root = the folder this script lives in (falls back to the cwd if pvbatch
+# does not define __file__)
+W = os.path.dirname(os.path.abspath(globals().get('__file__', 'paraview_colormaps.py')))
 R = os.path.join(W, 'Results')
 
 flow = XMLUnstructuredGridReader(FileName=[os.path.join(W, 'flow.vtu')])
