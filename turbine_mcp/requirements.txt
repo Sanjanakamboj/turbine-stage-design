@@ -1,4 +1,4 @@
-mcp[cli]>=1.2
+mcp[cli]>=1.2,<2     # 2.x renamed FastMCP -> MCPServer; the server uses the 1.x API
 pydantic>=2.0
 numpy
 matplotlib            # PDF report generation (default-on in every tool)
