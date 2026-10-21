@@ -59,14 +59,23 @@ def _metrics(r):
     )
 
 
-def sweep(param, values, **base):
+_COEFFS = {"psi", "phi", "DOR", "eta_TT", "M3"}   # DesignCoeffs fields
+
+
+def sweep(param, values):
+    """Vary one parameter (a design coefficient OR a boundary-condition input)
+    about the reference engine and collect the resulting metrics."""
     out = []
     for v in values:
-        co = dict(psi=base.get("psi", 1.8), phi=base.get("phi", 0.5),
-                  DOR=base.get("DOR", 0.35), eta_TT=base.get("eta_TT", 0.87),
-                  M3=base.get("M3", 0.3))
-        co[param] = float(v)
-        m = _metrics(run_meanline(StageInputs(), DesignCoeffs(**co)))
+        co = dict(psi=1.8, phi=0.5, DOR=0.35, eta_TT=0.87, M3=0.3)
+        inp = {}
+        if param in _COEFFS:
+            co[param] = float(v)
+        elif param == "P_shaft_MW":
+            inp["P_shaft"] = float(v) * 1e6      # StageInputs takes Watts
+        else:                                    # TIT_C, pi_C, mdot, n_stages ...
+            inp[param] = float(v)
+        m = _metrics(run_meanline(StageInputs(**inp), DesignCoeffs(**co)))
         m[param] = float(v)
         out.append(m)
     return out
