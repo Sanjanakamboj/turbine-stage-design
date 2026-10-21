@@ -1,7 +1,12 @@
 # Turbine MCP server
 
 An [MCP](https://modelcontextprotocol.io) server that exposes the axial-turbine
-stage-design chain as tools an LLM (Claude, etc.) can call.
+stage-design chain as tools an LLM or any MCP client can call.
+
+> **Engineering reference:** [`SKILLS.md`](SKILLS.md) codifies the valid input
+> ranges, the design-constraint bands, where the 1D mean-line method breaks down,
+> and how to read the SU2/CFD output — the knowledge needed to call these tools
+> well, with pointers back to the code that enforces each number.
 
 ## Tools
 
@@ -83,6 +88,11 @@ RUN_CFD_TESTS=1 python3 -m pytest tests/test_cfd_integration.py   # heavy GMSH+S
 GMSH+SU2 end-to-end test is skipped unless `RUN_CFD_TESTS=1` and the `SU2_CFD`
 binary and a `blade_coordinates.dat` are present.
 
+[GitHub Actions CI](../.github/workflows/ci.yml) runs the deterministic,
+pure-Python design-core tests (`test_meanline`, `test_blade`, `test_validation`)
+on Python 3.10–3.12 for every push and PR. The geometry/ParaBlade, GMSH-mesh and
+report-rendering tests need the native toolchain and run locally.
+
 You can also drive the live server interactively with the MCP Inspector
 (`mcp dev turbine_mcp_server.py`) to browse tool schemas and fire calls by hand.
 
@@ -94,12 +104,11 @@ You can also drive the live server interactively with the MCP Inspector
 | `SU2_BIN` | path to the `SU2_CFD` binary |
 | `PARABLADE_PATH` | path to the `parablade` package |
 
-## Use with Claude Code
+## Use from an MCP client
 
-A project-scoped `../.mcp.json` registers this server as `turbine`. Claude Code
-auto-detects it; approve the server when prompted, then ask e.g.
-*"design an HP turbine stage with ψ=1.8, φ=0.5, reaction 0.35"* and Claude will
-call `turbine_design_stage`.
+A project-scoped `../.mcp.json` registers this server as `turbine`. In a client that
+reads it, ask e.g. *"design an HP turbine stage with ψ=1.8, φ=0.5, reaction 0.35"*
+and the client will call `turbine_design_stage`.
 
 ## Example (direct Python)
 
