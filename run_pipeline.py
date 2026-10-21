@@ -5,7 +5,7 @@
 
 This is the headless/automation entry point: it calls the same turbine_design
 functions the MCP tools wrap, so a cron job, CI step, or shell loop can drive the
-whole design without an interactive Claude session.
+whole design without an interactive agent session.
 
 Examples
 --------
@@ -18,8 +18,16 @@ Examples
     # also mesh + solve the cascade CFD (takes minutes; needs SU2_BIN)
     python3 run_pipeline.py --case hp_cfd --cfd
 
+    # explicitly skip the SU2 solve even if --cfd is passed (design-only / CI)
+    python3 run_pipeline.py --case hp_cfd --cfd --dry-run
+
     # parameter sweep
     for p in 1.6 1.8 2.0; do python3 run_pipeline.py --psi $p --case psi_$p; done
+
+CFD is opt-in: with neither --cfd nor --dry-run the script already runs the
+design-only chain (mean-line -> blade -> airfoil -> report) and never touches
+SU2. --dry-run makes that intent explicit and overrides --cfd, so the same
+command works on a machine without the SU2 binary (e.g. in CI).
 """
 import argparse
 import os
@@ -45,6 +53,8 @@ def main() -> None:
     ap.add_argument("--stagger", type=float, default=39.0, help="blade stagger [deg]")
     ap.add_argument("--zweifel", type=float, default=1.0, help="Zweifel coefficient")
     ap.add_argument("--cfd", action="store_true", help="also run GMSH+SU2 CFD (minutes)")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="design-only chain: skip the SU2 solve even if --cfd is given")
     ap.add_argument("--no-report", action="store_true", help="skip the LaTeX report")
     args = ap.parse_args()
 
@@ -75,9 +85,11 @@ def main() -> None:
 
     # 4) optional CFD ------------------------------------------------------------
     cfd_data = None
-    if args.cfd:
+    if args.cfd and args.dry_run:
+        print("[cfd] --dry-run: skipping SU2 solve (design-only chain)")
+    if args.cfd and not args.dry_run:
         from turbine_design import cfd as CFD
-        su2 = os.environ.get("SU2_BIN", "/Users/sanju/Downloads/bin/SU2_CFD")
+        su2 = os.environ.get("SU2_BIN", "SU2_CFD")
         wd = os.path.join(outdir, "cfd_run")
         os.makedirs(wd, exist_ok=True)
         mesh_su2 = os.path.join(wd, "blade_mesh.su2")
